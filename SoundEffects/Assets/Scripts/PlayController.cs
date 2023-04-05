@@ -7,6 +7,7 @@ public class PlayController : MonoBehaviour
     // Start is called before the first frame update
     Rigidbody playerRb;
     public float jumpForce;
+    int jumpsLeft;
     public float gravityModifier;
     public bool isOnGround = true;
     public bool gameOver;
@@ -37,6 +38,11 @@ public class PlayController : MonoBehaviour
             playerAmin.SetTrigger("Jump_trig");
             dirtParticle.Stop();
         }
+        else if(Input.GetKeyDown(KeyCode.Space) && !isOnGround && !gameOver && jumpsLeft != 0)
+            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            playerAudio.PlayOneShot(jumpSound, 1.0f);
+            isOnGround = false;
+            playerAmin.SetTrigger("Jump_trig");
     }
 
     private void OnCollisionEnter(Collision collision)

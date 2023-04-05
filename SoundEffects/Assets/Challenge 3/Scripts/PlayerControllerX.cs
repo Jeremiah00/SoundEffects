@@ -7,7 +7,7 @@ public class PlayerControllerX : MonoBehaviour
     public bool gameOver;
 
     public float floatForce;
-    private float gravityModifier = 1.5f;
+    public float gravityModifier;
     private Rigidbody playerRb;
 
     public ParticleSystem explosionParticle;
@@ -33,9 +33,9 @@ public class PlayerControllerX : MonoBehaviour
     void Update()
     {
         // While space is pressed and player is low enough, float up
-        if (Input.GetKeyDown(KeyCode.Space) && !gameOver)
+        if (Input.GetKey(KeyCode.Space) && !gameOver)
         {
-            playerRb.AddForce(Vector3.up * floatForce, ForceMode.Impulse);
+            playerRb.AddForce(Vector3.up * floatForce);
         }
     }
 
@@ -49,6 +49,7 @@ public class PlayerControllerX : MonoBehaviour
             gameOver = true;
             Debug.Log("Game Over!");
             Destroy(other.gameObject);
+            Destroy(gameObject);
         } 
 
         // if player collides with money, fireworks
@@ -58,6 +59,10 @@ public class PlayerControllerX : MonoBehaviour
             playerAudio.PlayOneShot(moneySound, 1.0f);
             Destroy(other.gameObject);
 
+        }
+        if (other.gameObject.CompareTag("Ground") && !gameOver)
+        {
+            playerRb.AddForce(Vector3.up * 1000);
         }
 
     }
