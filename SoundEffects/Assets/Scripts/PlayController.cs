@@ -7,11 +7,13 @@ public class PlayController : MonoBehaviour
     // Start is called before the first frame update
     Rigidbody playerRb;
     public float jumpForce;
-    int jumpsLeft;
+    public float airJumpForce;
+    bool jumpsLeft = false;
     public float gravityModifier;
     public bool isOnGround = true;
+    public bool doubleSpeed = false;
     public bool gameOver;
-    Animator playerAmin;
+    Animator playerAnim;
     public ParticleSystem explosionParticle;
     public ParticleSystem dirtParticle;
     public AudioClip jumpSound;
@@ -22,7 +24,7 @@ public class PlayController : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody>();
         Physics.gravity *= gravityModifier;
-        playerAmin = GetComponent<Animator>();
+        playerAnim = GetComponent<Animator>();
         playerAudio = GetComponent<AudioSource>();
         
     }
@@ -35,14 +37,29 @@ public class PlayController : MonoBehaviour
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             playerAudio.PlayOneShot(jumpSound, 1.0f);
             isOnGround = false;
-            playerAmin.SetTrigger("Jump_trig");
+            playerAnim.SetTrigger("Jump_trig");
             dirtParticle.Stop();
+            jumpsLeft = false;
         }
-        else if(Input.GetKeyDown(KeyCode.Space) && !isOnGround && !gameOver && jumpsLeft != 0)
-            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        else if(Input.GetKeyDown(KeyCode.Space) && !isOnGround && !gameOver && !jumpsLeft)
+        {
+            playerRb.AddForce(Vector3.up * airJumpForce, ForceMode.Impulse);
             playerAudio.PlayOneShot(jumpSound, 1.0f);
-            isOnGround = false;
-            playerAmin.SetTrigger("Jump_trig");
+            jumpsLeft = true;
+            playerAnim.SetTrigger("Jump_trig");
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            doubleSpeed = true;
+            playerAnim.SetFloat("Speed_Multiplier", 2.0f);
+        }
+        else if (doubleSpeed)
+        {
+            doubleSpeed = false;
+            playerAnim.SetFloat("Speed_Multiplier", 1.0f);
+        }
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -50,6 +67,7 @@ public class PlayController : MonoBehaviour
         if(collision.gameObject.CompareTag("Ground"))
         {
             isOnGround = true;
+            
             dirtParticle.Play();
         }
         else if (collision.gameObject.CompareTag("Obstacle"))
@@ -57,8 +75,8 @@ public class PlayController : MonoBehaviour
             gameOver = true;
             Debug.Log("Game Over!");
             playerAudio.PlayOneShot(crashSound, 1.0f);
-            playerAmin.SetBool("Death_b", true);
-            playerAmin.SetInteger("DeathType_int", 1);
+            playerAnim.SetBool("Death_b", true);
+            playerAnim.SetInteger("DeathType_int", 1);
             explosionParticle.Play();
             dirtParticle.Stop();
         }

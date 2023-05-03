@@ -48,8 +48,8 @@ public class PlayerControllerX : MonoBehaviour
             playerAudio.PlayOneShot(explodeSound, 1.0f);
             gameOver = true;
             Debug.Log("Game Over!");
-            Destroy(other.gameObject);
-            Destroy(gameObject);
+            Destroy(other.gameObject, 0.3f);
+            Destroy(gameObject, 0.5f);
         } 
 
         // if player collides with money, fireworks

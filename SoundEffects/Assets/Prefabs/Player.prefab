@@ -755,7 +755,7 @@ GameObject:
   - component: {fileID: 6868710024864992773}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -844,11 +844,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpForce: 18
+  airJumpForce: 0
   gravityModifier: 3.8
   isOnGround: 1
   gameOver: 0
   explosionParticle: {fileID: 2445959275347007061}
   dirtParticle: {fileID: 1215886880470205438}
+  jumpSound: {fileID: 0}
+  crashSound: {fileID: 0}
 --- !u!1 &6868710024326841653
 GameObject:
   m_ObjectHideFlags: 0
